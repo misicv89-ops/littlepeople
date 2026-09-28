@@ -41,6 +41,8 @@ a:hover{color:oklch(0.34 0.06 158)}
 input,textarea,select,button{font:inherit}
 @keyframes lpFloatA{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(14px,-18px) rotate(6deg)}}
 @keyframes lpFloatB{0%,100%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(-16px,12px) rotate(-8deg)}}
+@keyframes lpNavA{0%,100%{transform:translate(0,0)}25%{transform:translate(22px,10px)}50%{transform:translate(40px,-4px)}75%{transform:translate(16px,-8px)}}
+@keyframes lpNavB{0%,100%{transform:translate(0,0)}33%{transform:translate(-26px,-14px)}66%{transform:translate(18px,-22px)}}
 @keyframes lpHeroIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @media (max-width: 979px){
 main section:not(#faq),footer{text-align:center!important}
@@ -61,7 +63,12 @@ main section#upis ol li[style]{justify-content:flex-start!important;text-align:l
 <div style="min-height:100vh;background:#FAF6EF;padding-bottom:{{ bottomPad }}">
 
 <header style="position:sticky;top:0;z-index:50;transition:background .35s ease, box-shadow .35s ease, backdrop-filter .35s ease;background:{{ navBg }};box-shadow:{{ navShadow }};backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)">
-  <nav aria-label="Glavna navigacija" style="max-width:1280px;margin:0 auto;padding:14px clamp(20px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:24px">
+  <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+    <div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;background:#FAF6EF">
+      {{ navDots }}
+    </div>
+  </sc-if>
+  <nav aria-label="Glavna navigacija" style="position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:14px clamp(20px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:24px">
     <a href="#pocetna" aria-label="Little People – početna" style="display:flex;align-items:center;color:#2B2622"><img src="images/logo.jpg" alt="Little People – Childcare Center &amp; Birthday Party" width="60" height="60" style="display:block;width:60px;height:60px;border-radius:50%;object-fit:cover;background:#FFFFFF;border:2px solid #FFFDF9;box-shadow:0 6px 18px -8px rgba(43,38,34,.35), 0 0 0 1px #E8DFD1"></a>
     <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;align-items:center;gap:clamp(12px,1.8vw,26px)">
@@ -73,17 +80,18 @@ main section#upis ol li[style]{justify-content:flex-start!important;text-align:l
     <div style="display:flex;align-items:center;gap:10px">
       <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><a href="#upis" style="background:oklch(0.42 0.06 158);color:#FFFDF9;padding:12px 20px;border-radius:999px;font-weight:700;font-size:13px;letter-spacing:.08em;display:inline-flex;gap:8px;align-items:center;transition:gap .25s, background .25s;white-space:nowrap" style-hover="gap:13px;background:oklch(0.36 0.06 158);color:#FFFDF9">ZAKAŽI POSETU <span aria-hidden="true">→</span></a></sc-if>
       <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
-        <button type="button" onClick="{{ toggleMenu }}" aria-label="{{ menuLabel }}" aria-expanded="{{ menuOpen }}" aria-controls="mobilni-meni" style="width:46px;height:46px;border-radius:50%;border:1.5px solid #2B2622;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:0">
-          <span style="display:block;width:18px;height:2px;background:#2B2622;border-radius:2px"></span>
-          <span style="display:block;width:18px;height:2px;background:#2B2622;border-radius:2px"></span>
+        <button type="button" onClick="{{ toggleMenu }}" aria-label="{{ menuLabel }}" aria-expanded="{{ menuOpen }}" aria-controls="mobilni-meni" style="position:relative;width:48px;height:48px;border-radius:16px 20px 14px 18px;border:1.5px solid oklch(0.8 0.06 150);background:{{ burgerBg }};cursor:pointer;padding:0;transition:background .3s ease, border-radius .4s ease;box-shadow:0 8px 18px -10px rgba(47,81,64,.45)">
+          <span style="position:absolute;left:14px;top:17px;display:block;width:18px;height:2.5px;background:#2F5140;border-radius:2px;transition:transform .35s cubic-bezier(.2,.7,.2,1);transform:{{ burgerT1 }}"></span>
+          <span style="position:absolute;left:14px;top:22.5px;display:block;width:12px;height:2.5px;background:#2F5140;border-radius:2px;transition:opacity .25s ease;opacity:{{ burgerMidOp }}"></span>
+          <span style="position:absolute;left:14px;top:28px;display:block;width:18px;height:2.5px;background:#2F5140;border-radius:2px;transition:transform .35s cubic-bezier(.2,.7,.2,1);transform:{{ burgerT3 }}"></span>
         </button>
       </sc-if>
     </div>
   </nav>
   <sc-if value="{{ menuVisible }}" hint-placeholder-val="{{ false }}">
-    <div id="mobilni-meni" style="background:#FFFDF9;border-top:1px solid #E8DFD1;padding:12px clamp(20px,4vw,40px) 28px;display:flex;flex-direction:column;align-items:stretch;text-align:center;box-shadow:0 20px 40px -20px rgba(43,38,34,.25)">
-      <sc-for list="{{ nav }}" as="l" hint-placeholder-count="8">
-        <a href="{{ l.href }}" onClick="{{ closeMenu }}" style="font-family:'Baloo 2',sans-serif;font-weight:600;font-size:24px;color:#2B2622;padding:10px 0;border-bottom:1px solid #F0E9DD">{{ l.label }}</a>
+    <div id="mobilni-meni" style="position:relative;z-index:2;background:#FFFDF9;border-top:1px solid #E8DFD1;border-radius:0 0 28px 28px;padding:16px 20px 24px;max-height:calc(100vh - 90px);max-height:calc(100dvh - 90px);overflow-y:auto;display:flex;flex-direction:column;gap:8px;box-shadow:0 24px 40px -20px rgba(43,38,34,.3)">
+      <sc-for list="{{ navM }}" as="l" hint-placeholder-count="7">
+        <a href="{{ l.href }}" onClick="{{ closeMenu }}" style="display:flex;align-items:center;justify-content:center;gap:12px;min-height:52px;padding:10px 18px;border-radius:18px;background:{{ l.bg }};font-family:'Baloo 2',sans-serif;font-weight:600;font-size:21px;line-height:1;color:#2B2622">{{ l.label }}</a>
       </sc-for>
     </div>
   </sc-if>
@@ -100,7 +108,7 @@ main section#upis ol li[style]{justify-content:flex-start!important;text-align:l
       <p style="margin:24px 0 0;max-width:30ch;font-size:clamp(18px,1.6vw,21px);line-height:1.55;color:#5C5249;text-wrap:pretty">Toplo, sigurno i podsticajno mesto za rast, igru, druženje i prve velike korake.</p>
       <div style="margin-top:36px;display:flex;flex-wrap:wrap;gap:12px">
         
-        <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><a href="#o-nama" style="border:1.5px solid #2B2622;color:#2B2622;padding:17px 26px;border-radius:999px;font-weight:700;font-size:15px;letter-spacing:.08em;display:inline-flex;gap:10px;align-items:center;justify-content:center;transition:gap .25s, background .25s;flex:1 1 200px;max-width:260px" style-hover="gap:15px;background:#FFFDF9;color:#2B2622">SAZNAJTE VIŠE <span aria-hidden="true">↓</span></a></sc-if><sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}"><a href="tel:+381631913328" style="border:1.5px solid #2B2622;color:#2B2622;padding:17px 26px;border-radius:999px;font-weight:700;font-size:15px;letter-spacing:.08em;display:inline-flex;gap:10px;align-items:center;justify-content:center;transition:gap .25s, background .25s;flex:1 1 200px;max-width:260px" style-hover="gap:15px;background:#FFFDF9;color:#2B2622">POZOVITE NAS <span aria-hidden="true">→</span></a></sc-if>
+        <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}"><a href="#o-nama" style="border:1.5px solid #2B2622;color:#2B2622;padding:17px 26px;border-radius:999px;font-weight:700;font-size:15px;letter-spacing:.08em;display:inline-flex;gap:10px;align-items:center;justify-content:center;transition:gap .25s, background .25s;flex:1 1 200px;max-width:260px" style-hover="gap:15px;background:#FFFDF9;color:#2B2622">SAZNAJTE VIŠE <span aria-hidden="true">↓</span></a></sc-if><sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}"><a href="tel:+381631913328" style="border:1.5px solid oklch(0.82 0.06 150);background:oklch(0.9 0.05 150);color:#2F5140;padding:17px 26px;border-radius:999px;font-weight:700;font-size:15px;letter-spacing:.08em;display:inline-flex;gap:10px;align-items:center;justify-content:center;transition:gap .25s, background .25s;flex:1 1 200px;max-width:260px" style-hover="gap:15px;background:oklch(0.86 0.06 150);color:#2F5140">POZOVITE NAS <span aria-hidden="true">→</span></a></sc-if>
       </div>
     </div>
     <div style="position:relative;animation:lpHeroIn 1.1s .15s cubic-bezier(.2,.7,.2,1) both">
@@ -578,6 +586,16 @@ class Component extends DCLogic {
     );
     return {
       mobile, desktop: !mobile, notes,
+      burgerBg: menu ? 'oklch(0.86 0.06 150)' : 'oklch(0.92 0.045 150)',
+      burgerT1: menu ? 'translateY(5.5px) rotate(45deg)' : 'none',
+      burgerT3: menu ? 'translateY(-5.5px) rotate(-45deg)' : 'none',
+      burgerMidOp: menu ? 0 : 1,
+      navM: C.nav.map(([label, href], i) => ({ label, href, bg: ['oklch(0.95 0.035 150)','oklch(0.97 0.04 95)','oklch(0.95 0.03 55)','oklch(0.96 0.02 235)'][i % 4] })),
+      navDots: React.createElement(React.Fragment, null,
+        this.blob({ width: 26, height: 26, left: '30%', top: 12, borderRadius: '50%', background: YEL }, 'lpNavA 9s ease-in-out infinite'),
+        this.blob({ width: 16, height: 16, left: '48%', top: 44, borderRadius: '50%', background: PEACH }, 'lpNavB 11s ease-in-out infinite'),
+        this.blob({ width: 20, height: 20, left: '64%', top: 18, borderRadius: '50%', background: SAGE }, 'lpNavA 13s ease-in-out -4s infinite')
+      ),
       spaceCols: w >= 820 ? 'repeat(3,minmax(0,1fr))' : w >= 520 ? 'repeat(2,minmax(0,1fr))' : '1fr',
       menuOpen: menu, menuVisible: mobile && menu, menuLabel: menu ? 'Zatvori meni' : 'Otvori meni',
       toggleMenu: () => this.setState(s => ({ menu: !s.menu })),
